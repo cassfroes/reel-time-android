@@ -33,9 +33,10 @@ const VideoCard = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [liked, setLiked] = useState(false);
   const [localLikes, setLocalLikes] = useState(likes);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && !videoError) {
       if (isActive) {
         videoRef.current.play().catch(error => {
           console.log("Autoplay prevented:", error);
@@ -46,10 +47,10 @@ const VideoCard = ({
         setIsPlaying(false);
       }
     }
-  }, [isActive]);
+  }, [isActive, videoError]);
 
   const togglePlay = () => {
-    if (videoRef.current) {
+    if (videoRef.current && !videoError) {
       if (isPlaying) {
         videoRef.current.pause();
       } else {
@@ -66,18 +67,40 @@ const VideoCard = ({
     setLocalLikes(prevLikes => liked ? prevLikes - 1 : prevLikes + 1);
   };
 
+  const handleVideoError = () => {
+    console.log("Video failed to load:", videoUrl);
+    setVideoError(true);
+  };
+
+  const handleVideoLoad = () => {
+    console.log("Video loaded successfully:", videoUrl);
+    setVideoError(false);
+  };
+
   return (
     <div className="relative w-full h-full bg-black overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full" onClick={togglePlay}>
-        <video 
-          ref={videoRef}
-          className="video-player"
-          src={videoUrl}
-          loop
-          muted={false}
-          playsInline
-          preload="auto"
-        />
+        {videoError ? (
+          <div className="w-full h-full flex items-center justify-center bg-gray-800">
+            <div className="text-center text-white">
+              <p className="text-lg mb-2">Video not available</p>
+              <p className="text-sm text-gray-400">@{username}</p>
+            </div>
+          </div>
+        ) : (
+          <video 
+            ref={videoRef}
+            className="video-player"
+            src={videoUrl}
+            loop
+            muted={false}
+            playsInline
+            preload="metadata"
+            onError={handleVideoError}
+            onLoadedData={handleVideoLoad}
+            crossOrigin="anonymous"
+          />
+        )}
       </div>
       
       {/* Overlay for content */}

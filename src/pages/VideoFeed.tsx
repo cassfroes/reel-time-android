@@ -1,14 +1,13 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import VideoCard from "@/components/VideoCard";
 import BottomNavigation from "@/components/BottomNavigation";
 import { toast } from "@/components/ui/sonner";
 
-// Mock data for videos
+// Mock data for videos with working video URLs
 const mockVideos = [
   {
     id: "1",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-young-woman-walking-through-exotic-vegetation-34512-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     username: "traveller",
     description: "Exploring hidden trails in Bali 🌴🌺 #travel #bali #adventure",
     audioTrack: "Tropical Vibes - Summer Beats",
@@ -19,7 +18,7 @@ const mockVideos = [
   },
   {
     id: "2",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-fashion-woman-with-silver-makeup-39875-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     username: "makeupArtist",
     description: "Silver galaxy makeup look ✨👄 #makeup #beauty #tutorial",
     audioTrack: "Space Odyssey - Cosmic Dreams",
@@ -30,9 +29,9 @@ const mockVideos = [
   },
   {
     id: "3",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-basketball-player-dunking-612-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
     username: "basketballKing",
-    description: "Saturday practice slam dunks 🏀 #basketball #sports #dunk",
+    description: "Saturday practice slam dunks 🏀 #sports #dunk",
     audioTrack: "Court Vibes - Bounce",
     likes: 876,
     comments: 56,
@@ -41,7 +40,7 @@ const mockVideos = [
   },
   {
     id: "4",
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-reflection-of-the-dancing-northern-lights-4084-large.mp4",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
     username: "nightSky",
     description: "Northern lights are magical ❄️🌌 #aurora #travel #nature",
     audioTrack: "Arctic Dreams - Night Sky",
