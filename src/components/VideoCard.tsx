@@ -1,6 +1,6 @@
 
 import React, { useRef, useState, useEffect } from "react";
-import { Heart, MessageCircle, Share2, Music, User } from "lucide-react";
+import { Heart, MessageCircle, Share2, Music, User, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -35,9 +35,13 @@ const VideoCard = ({
   const [localLikes, setLocalLikes] = useState(likes);
   const [videoError, setVideoError] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     if (videoRef.current && !videoError) {
+      // Set muted state based on current preference
+      videoRef.current.muted = isMuted;
+      
       if (isActive) {
         const playPromise = videoRef.current.play();
         if (playPromise !== undefined) {
@@ -51,7 +55,7 @@ const VideoCard = ({
         setIsPlaying(false);
       }
     }
-  }, [isActive, videoError]);
+  }, [isActive, videoError, isMuted]);
 
   const togglePlay = () => {
     if (videoRef.current && !videoError) {
@@ -66,6 +70,14 @@ const VideoCard = ({
         }
       }
       setIsPlaying(!isPlaying);
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      const newMutedState = !isMuted;
+      videoRef.current.muted = newMutedState;
+      setIsMuted(newMutedState);
     }
   };
 
@@ -98,12 +110,12 @@ const VideoCard = ({
         ) : (
           <video 
             ref={videoRef}
-            className="video-player w-full h-full object-contain"
+            className="video-player"
             src={videoUrl}
             loop
             playsInline
             preload="auto"
-            muted={false}
+            muted={isMuted}
             onError={handleVideoError}
             onLoadedData={handleVideoLoad}
           />
@@ -184,6 +196,23 @@ const VideoCard = ({
             <Share2 className="w-8 h-8 text-white" />
           </Button>
           <span className="text-white text-xs mt-1">{shares}</span>
+        </div>
+        
+        {/* Volume/Mute button */}
+        <div className="flex flex-col items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-transparent hover:bg-white/10"
+            onClick={toggleMute}
+          >
+            {isMuted ? (
+              <VolumeX className="w-8 h-8 text-white" />
+            ) : (
+              <Volume2 className="w-8 h-8 text-white" />
+            )}
+          </Button>
+          <span className="text-white text-xs mt-1">{isMuted ? "Unmute" : "Mute"}</span>
         </div>
       </div>
     </div>
