@@ -34,13 +34,17 @@ const VideoCard = ({
   const [liked, setLiked] = useState(false);
   const [localLikes, setLocalLikes] = useState(likes);
   const [videoError, setVideoError] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
     if (videoRef.current && !videoError) {
       if (isActive) {
-        videoRef.current.play().catch(error => {
-          console.log("Autoplay prevented:", error);
-        });
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log("Autoplay prevented:", error);
+          });
+        }
         setIsPlaying(true);
       } else {
         videoRef.current.pause();
@@ -54,9 +58,12 @@ const VideoCard = ({
       if (isPlaying) {
         videoRef.current.pause();
       } else {
-        videoRef.current.play().catch(error => {
-          console.log("Play prevented:", error);
-        });
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log("Play prevented:", error);
+          });
+        }
       }
       setIsPlaying(!isPlaying);
     }
@@ -75,6 +82,7 @@ const VideoCard = ({
   const handleVideoLoad = () => {
     console.log("Video loaded successfully:", videoUrl);
     setVideoError(false);
+    setVideoLoaded(true);
   };
 
   return (
@@ -90,16 +98,22 @@ const VideoCard = ({
         ) : (
           <video 
             ref={videoRef}
-            className="video-player"
+            className="video-player w-full h-full object-contain"
             src={videoUrl}
             loop
-            muted={false}
             playsInline
-            preload="metadata"
+            preload="auto"
+            muted={false}
             onError={handleVideoError}
             onLoadedData={handleVideoLoad}
-            crossOrigin="anonymous"
           />
+        )}
+        
+        {/* Loading indicator */}
+        {!videoLoaded && !videoError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+            <div className="animate-pulse text-white text-lg">Loading...</div>
+          </div>
         )}
       </div>
       
